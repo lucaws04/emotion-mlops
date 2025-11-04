@@ -1,0 +1,29 @@
+name: evaluate_component
+version: 1.4.0
+display_name: Evaluate Component
+description: Evaluate the BERT model and log metrics
+type: command
+
+inputs:
+  data_asset_uri:
+    type: uri_file
+    optional: False
+  model_dir:
+    type: uri_folder
+    optional: False
+
+outputs:
+  output_dir:
+    type: uri_folder
+
+code: .
+environment: azureml:pipeline:1.0.5
+
+command: >-
+  pip install setup-1.0.9-py3-none-any.whl &&
+  python evaluate.py
+  --data_asset_uri ${{inputs.data_asset_uri}}
+  --model_dir ${{inputs.model_dir}}
+  --output_dir ${{outputs.output_dir}}
+
+is_deterministic: false

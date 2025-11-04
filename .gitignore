@@ -1,0 +1,66 @@
+# Bytecode + cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+nlp9/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Coverage and test reports
+logs/
+.coverage
+htmlcov/
+.cache/
+pytest_cache/
+*.prof
+src/__pycache__/
+tests/__pycache__/
+app/__pycache__/
+uitils/__pycache__/
+.pytest_cache/
+
+# Poetry/Build
+poetry.lock
+dist/
+/build/
+*.egg-info/
+
+# VSCode & IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Miscellaneous
+config/
+dist/
+poetry.lock
+pytest.ini
+uv.lock
+src/setup.egg-info/
+
+# Sphinx build folders
+html/
+.doctrees/
+doctrees/
+
+# .ignore files
+.azureignore
+.azuremlignore
+.coverage
+.dockerignorel
+docs/make.bat
+docs/Makefile
+docs/source/_templates/
+docs/source/_static/

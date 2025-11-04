@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Pipeline DAG &mdash; NLP9 2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=cb975c41"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Overview" href="api.html" />
+    <link rel="prev" title="Getting Started" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NLP9
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Pipeline DAG</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dag-details">DAG Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#task-descriptions">Task Descriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-functions">Usage Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="package.html">Python Package Plan</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NLP9</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data Pipeline DAG</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/airflow.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-pipeline-dag">
+<h1>Data Pipeline DAG<a class="headerlink" href="#data-pipeline-dag" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This Airflow DAG orchestrates a data pipeline that downloads a dataset from an Azure Blob Storage,
+ingests it locally, preprocesses the data by mapping emotions to broader categories, validates the
+preprocessed data, and finally creates an Azure ML data asset for use in ML pipelines.</p>
+<p>The DAG runs on a weekly schedule and consists of five main tasks executed sequentially:</p>
+<ol class="arabic simple">
+<li><p>Download blob from Azure Blob Storage</p></li>
+<li><p>Load and ingest the downloaded dataset</p></li>
+<li><p>Preprocess the dataset (emotion mapping)</p></li>
+<li><p>Validate the processed dataset (missing values and required columns)</p></li>
+<li><p>Create a data asset in Azure Machine Learning workspace</p></li>
+</ol>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Apache Airflow environment with <cite>azure-identity</cite>, <cite>azure-ai-ml</cite>, <cite>azure-storage-blob</cite>, and <cite>pandas</cite> installed.</p></li>
+<li><p>An Airflow connection named <cite>azure_ml_conn</cite> configured with the following JSON in the “Extra” field:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;tenant_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_TENANT_ID&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;client_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_CLIENT_ID&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;client_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_CLIENT_SECRET&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;subscription_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_AZURE_SUBSCRIPTION_ID&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;resource_group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_RESOURCE_GROUP&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;workspace_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR_AZURE_ML_WORKSPACE&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Access to the Azure Blob Storage container and blob specified in the DAG code.</p></li>
+<li><p>Local temporary directory <cite>/tmp</cite> for file storage (modifiable in code).</p></li>
+</ul>
+</section>
+<section id="dag-details">
+<h2>DAG Details<a class="headerlink" href="#dag-details" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>DAG ID</strong>: NLP9_data_pipeline_dag</p></li>
+<li><p><strong>Owner</strong>: NLP9</p></li>
+<li><p><strong>Schedule</strong>: Weekly (<cite>&#64;weekly</cite>)</p></li>
+<li><p><strong>Start Date</strong>: June 19, 2025</p></li>
+<li><p><strong>Retries</strong>: 0</p></li>
+<li><p><strong>Tags</strong>: <cite>nlp9</cite>, <cite>azureml</cite>, <cite>datastore</cite>, <cite>blob</cite>, <cite>download</cite></p></li>
+</ul>
+</section>
+<section id="task-descriptions">
+<h2>Task Descriptions<a class="headerlink" href="#task-descriptions" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>download_blob</strong></p>
+<p>Downloads the dataset CSV file from Azure Blob Storage to a local path (<cite>/tmp/processed_dataset.csv</cite>).</p>
+</li>
+<li><p><strong>loading_blob</strong></p>
+<p>Loads the downloaded CSV dataset into a Pandas DataFrame and saves it as <cite>ingested.csv</cite> in <cite>/tmp</cite>.</p>
+</li>
+<li><p><strong>preprocess_blob</strong></p>
+<p>Applies emotion mapping to convert detailed emotion labels into broader categories.</p>
+</li>
+<li><p><strong>validate_blob</strong></p>
+<p>Checks the processed dataset for missing values and required columns. If validation fails, the DAG stops.</p>
+</li>
+<li><p><strong>create_data_asset</strong></p>
+<p>Uploads the validated dataset to Azure ML as a versioned data asset.</p>
+</li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Clone the repository containing this DAG (or copy the DAG file into your Airflow <cite>dags/</cite> folder).</p></li>
+<li><p>Install the required Python packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>apache-airflow
+pip<span class="w"> </span>install<span class="w"> </span>azure-identity<span class="w"> </span>azure-ai-ml<span class="w"> </span>azure-storage-blob<span class="w"> </span>pandas
+</pre></div>
+</div>
+</li>
+<li><p>Configure your Airflow connection <cite>azure_ml_conn</cite> as described in the <strong>Prerequisites</strong> section.</p></li>
+<li><p>Restart your Airflow scheduler and webserver to pick up the new DAG.</p></li>
+</ol>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Once the DAG is deployed and dependencies are installed:</p>
+<ol class="arabic simple">
+<li><p>Open the Airflow UI (usually available at <cite>http://localhost:8080</cite>).</p></li>
+<li><p>Search for the DAG named <strong>NLP9_data_pipeline_dag</strong>.</p></li>
+<li><p>Turn the DAG “on” using the toggle switch.</p></li>
+<li><p>Trigger the DAG manually by clicking the <strong>Trigger DAG</strong> button or wait for the weekly schedule.</p></li>
+</ol>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>You can test individual components locally using Python scripts. For example, to test the emotion mapping step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.data.data_processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">emotion_mapping</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/ingested.csv&quot;</span><span class="p">)</span>
+<span class="n">df_mapped</span> <span class="o">=</span> <span class="n">emotion_mapping</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_mapped</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>To manually upload a dataset to Azure Blob and run the DAG end-to-end:</p>
+<ol class="arabic simple">
+<li><p>Upload a dataset file (e.g., <cite>raw_dataset.csv</cite>) to your Azure Blob container.</p></li>
+<li><p>Modify the blob name and container in the DAG file if needed.</p></li>
+<li><p>Trigger the DAG and monitor logs via the Airflow Web UI.</p></li>
+</ol>
+</section>
+<section id="usage-functions">
+<h2>Usage Functions<a class="headerlink" href="#usage-functions" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ayumi Chotoe, Lucas Duckworth, Raf Sikkema, Yash Yadav.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

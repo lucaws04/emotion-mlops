@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Module Documentation &mdash; NLP9 2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=cb975c41"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python Package Plan" href="package.html" />
+    <link rel="prev" title="API Overview" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NLP9
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airflow.html">Data Pipeline DAG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Module Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.cli.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.cli.cli.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli-options">CLI Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-components">Model Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load-emotion-model"><code class="docutils literal notranslate"><span class="pre">load_emotion_model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.inference.cli_inference.load_emotion_model"><code class="docutils literal notranslate"><span class="pre">load_emotion_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#predict-emotion-single"><code class="docutils literal notranslate"><span class="pre">predict_emotion_single</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.inference.cli_inference.predict_emotion_single"><code class="docutils literal notranslate"><span class="pre">predict_emotion_single()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#predict-from-input"><code class="docutils literal notranslate"><span class="pre">predict_from_input</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.inference.cli_inference.predict_from_input"><code class="docutils literal notranslate"><span class="pre">predict_from_input()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="package.html">Python Package Plan</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NLP9</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CLI Module Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli-module-documentation">
+<h1>CLI Module Documentation<a class="headerlink" href="#cli-module-documentation" title="Link to this heading"></a></h1>
+<p>This module provides a command-line interface (CLI) to perform emotion prediction
+using a fine-tuned BERT-based model.</p>
+<p>Run the CLI with the <code class="docutils literal notranslate"><span class="pre">predict</span></code> command and either <cite>–text</cite> or <cite>–file</cite>.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.cli.cli.main">
+<span class="sig-prename descclassname"><span class="pre">src.cli.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/cli/cli.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cli.cli.main" title="Link to this definition"></a></dt>
+<dd><p>📘 Emotion Prediction CLI Tool
+Run –help for usage instructions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.cli.cli.predict">
+<span class="sig-prename descclassname"><span class="pre">src.cli.cli.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text=&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file=&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/cli/cli.html#predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cli.cli.predict" title="Link to this definition"></a></dt>
+<dd><p>This command analyzes the input text or file to predict the emotion.</p>
+<p>You must provide either the –text/-t option with a string to analyze,
+or the –file/-f option with a path to a text file.</p>
+<p>Optionally, use –verbose/-v to display extra debug information during prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Input text to analyze. Mutually exclusive with ‘file’.</p></li>
+<li><p><strong>file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Path to a text file containing input text. Mutually exclusive with ‘text’.</p></li>
+<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, displays extra debug information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>typer.Exit</strong> – If neither –text nor –file is provided.</p>
+</dd>
+</dl>
+<p><strong>Example:</strong></p>
+<blockquote>
+<div><p>cli.py predict –text “I am so happy today!”
+cli.py predict –file ./input.txt –verbose</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cli.py<span class="w"> </span>predict<span class="w"> </span>--text<span class="w"> </span><span class="s2">&quot;I am so happy today!&quot;</span>
+python<span class="w"> </span>cli.py<span class="w"> </span>predict<span class="w"> </span>--file<span class="w"> </span>path/to/file.txt
+python<span class="w"> </span>cli.py<span class="w"> </span>predict<span class="w"> </span>--file<span class="w"> </span>input.txt<span class="w"> </span>--verbose
+</pre></div>
+</div>
+</section>
+<section id="cli-options">
+<h2>CLI Options<a class="headerlink" href="#cli-options" title="Link to this heading"></a></h2>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-text">
+<span id="cmdoption-t"></span><span class="sig-name descname"><span class="pre">--text</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"> <span class="pre">TEXT</span></span><a class="headerlink" href="#cmdoption-text" title="Link to this definition"></a></dt>
+<dd><p>A single input sentence for emotion prediction.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-file">
+<span id="cmdoption-f"></span><span class="sig-name descname"><span class="pre">--file</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">FILE</span></span><a class="headerlink" href="#cmdoption-file" title="Link to this definition"></a></dt>
+<dd><p>A path to a <cite>.txt</cite> file containing input sentences (one per line).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-verbose">
+<span id="cmdoption-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-verbose" title="Link to this definition"></a></dt>
+<dd><p>If set, enables debug logging and prints additional output.</p>
+</dd></dl>
+
+</section>
+<section id="model-components">
+<h2>Model Components<a class="headerlink" href="#model-components" title="Link to this heading"></a></h2>
+<p>These components are imported from <code class="docutils literal notranslate"><span class="pre">src.inference.cli_inference</span></code>.</p>
+</section>
+<section id="load-emotion-model">
+<h2><code class="docutils literal notranslate"><span class="pre">load_emotion_model</span></code><a class="headerlink" href="#load-emotion-model" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.inference.cli_inference.load_emotion_model">
+<span class="sig-prename descclassname"><span class="pre">src.inference.cli_inference.</span></span><span class="sig-name descname"><span class="pre">load_emotion_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/inference/cli_inference.html#load_emotion_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.inference.cli_inference.load_emotion_model" title="Link to this definition"></a></dt>
+<dd><p>Load a pre-trained BERT-based emotion classification model and tokenizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the directory containing the saved model files.</p></li>
+<li><p><strong>tokenizer_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the directory containing the saved tokenizer files.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:
+- <strong>model</strong> (<cite>BertForSequenceClassification</cite>): The loaded emotion classification model.
+- <strong>tokenizer</strong> (<cite>BertTokenizer</cite>): The tokenizer used to preprocess input text.
+- <strong>device</strong> (<cite>torch.device</cite>): The device (CPU or GPU) the model is loaded on.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="predict-emotion-single">
+<h2><code class="docutils literal notranslate"><span class="pre">predict_emotion_single</span></code><a class="headerlink" href="#predict-emotion-single" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.inference.cli_inference.predict_emotion_single">
+<span class="sig-prename descclassname"><span class="pre">src.inference.cli_inference.</span></span><span class="sig-name descname"><span class="pre">predict_emotion_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/inference/cli_inference.html#predict_emotion_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.inference.cli_inference.predict_emotion_single" title="Link to this definition"></a></dt>
+<dd><p>Predict emotion for a single text input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Input text string.</p></li>
+<li><p><strong>model</strong> – Loaded emotion classification model.</p></li>
+<li><p><strong>tokenizer</strong> – Corresponding tokenizer.</p></li>
+<li><p><strong>device</strong> – Device where model runs.</p></li>
+<li><p><strong>class_names</strong> (<em>list</em>) – List of emotion class names.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predicted emotion label.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="predict-from-input">
+<h2><code class="docutils literal notranslate"><span class="pre">predict_from_input</span></code><a class="headerlink" href="#predict-from-input" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.inference.cli_inference.predict_from_input">
+<span class="sig-prename descclassname"><span class="pre">src.inference.cli_inference.</span></span><span class="sig-name descname"><span class="pre">predict_from_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/inference/cli_inference.html#predict_from_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.inference.cli_inference.predict_from_input" title="Link to this definition"></a></dt>
+<dd><p>General-purpose prediction handler for CSV files, TXT files, or single string input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>str</em>) – Path to a .csv/.txt file or a single sentence.</p></li>
+<li><p><strong>model</strong> – Required components for</p></li>
+<li><p><strong>tokenizer</strong> – Required components for</p></li>
+<li><p><strong>device</strong> – Required components for</p></li>
+<li><p><strong>class_names</strong> – Required components for</p></li>
+<li><p><strong>prediction.</strong> (<em>emotion</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame with predictions (for files) or a
+single prediction (for strings).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame or str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="API Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="package.html" class="btn btn-neutral float-right" title="Python Package Plan" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ayumi Chotoe, Lucas Duckworth, Raf Sikkema, Yash Yadav.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

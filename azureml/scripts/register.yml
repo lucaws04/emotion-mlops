@@ -1,0 +1,19 @@
+name: register_model
+display_name: Register Model
+description: Register a trained model in Azure ML
+version: 1.1.2
+type: command
+
+inputs:
+  model_input:
+    type: uri_folder
+
+outputs:
+  model_name:
+    type: uri_folder
+
+code: .
+environment: azureml:pipeline:1.0.5
+command: >
+  pip install setup-1.0.9-py3-none-any.whl &&
+  python register.py --model_input ${{inputs.model_input}}

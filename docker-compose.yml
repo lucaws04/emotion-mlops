@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  backend:
+    image: lucas230533/nlp9:latest
+    ports:
+      - "3136:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s  # Give more time for ML model loading

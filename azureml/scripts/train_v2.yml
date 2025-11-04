@@ -1,0 +1,38 @@
+name: train_component
+version: 1.4.9
+display_name: Train Component
+description: Train a BERT model on the dataset
+type: command
+
+inputs:
+  learning_rate:
+    type: number
+    optional: true
+    default: 2e-5
+  batch_size:
+    type: integer
+    optional: true
+  num_epochs:
+    type: integer
+    optional: true
+  data_asset_uri:
+    type: uri_file
+    optional: false
+
+outputs:
+  model_output:
+    type: uri_folder
+
+code: .
+environment: azureml:pipeline:1.0.5
+
+command: >-
+  pip install setup-1.0.9-py3-none-any.whl &&
+  python train_v2.py
+  --data_asset_uri ${{inputs.data_asset_uri}}
+  --model_output ${{outputs.model_output}}
+  $[[--learning_rate ${{inputs.learning_rate}}]]
+  $[[--batch_size ${{inputs.batch_size}}]]
+  $[[--num_epochs ${{inputs.num_epochs}}]]
+
+is_deterministic: false
